@@ -158,9 +158,9 @@ export default {
 
         // Get filter index in localStorage;
         const filterIndex = this.persistedFilters[this.resourceName].findIndex(f => filter.class === f.filterClass);
-        if (updatedFilter.currentValue == null || updatedFilter.currentValue === '') {
-          if (filterIndex !== null) {
-            this.persistedFilters[this.resourceName].remove(filterIndex);
+        if (updatedFilter.currentValue === null || updatedFilter.currentValue === '') {
+          if (filterIndex !== -1) {
+            this.persistedFilters[this.resourceName].splice(filterIndex, 1);
           }
           return;
         }
