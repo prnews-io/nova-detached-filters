@@ -153,22 +153,33 @@ export default {
       if (this.isPersisting) {
         // Get updated filter from $store;
 
-        console.log(this.persistedFilters);
-        console.log(filter.class);
         const updatedFilter = this.getFilter(filter.class);
         if (!updatedFilter) return;
+
         // Get filter index in localStorage;
         const filterIndex = this.persistedFilters[this.resourceName].findIndex(f => filter.class === f.filterClass);
+        if (updatedFilter.currentValue == null || updatedFilter.currentValue === '') {
+          if (filterIndex !== null) {
+            this.persistedFilters[this.resourceName].remove(filterIndex);
+          }
+          return;
+        }
+
         if (filterIndex == null || filterIndex < 0 || !this.persistedFilters[this.resourceName][filterIndex]) {
           // If key-value pair doesn't exist in localStorage, save new
+
           this.persistedFilters[this.resourceName].push({
             filterClass: filter.class,
             value: updatedFilter.currentValue,
           });
-          console.log('check connection');
         } else {
           // If exists, update value
           this.persistedFilters[this.resourceName][filterIndex].value = updatedFilter.currentValue;
+        }
+
+        if (updatedFilter.currentValue == null || updatedFilter.currentValue === '') {
+          this.persistedFilters[this.resourceName].findIndex(f => filter.class === f.filterClass);
+          this.persistedFilters[this.resourceName].splice(filter.class);
         }
 
         localStorage.setItem('PERSISTED_DETACHED_FILTERS', JSON.stringify(this.persistedFilters));
