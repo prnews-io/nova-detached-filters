@@ -144,7 +144,7 @@ export default {
         });
       });
 
-      this.syncFilters();
+      //this.syncFilters();
     },
 
     handleFilterChanged(filter) {
