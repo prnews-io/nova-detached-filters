@@ -101,10 +101,10 @@ export default {
     },
 
     resetFilter(filter) {
-      this.$store.commit(`${this.resourceName}/updateFilterState`, {
-        filterClass: filter.class,
-        value: null,
-      });
+      // this.$store.commit(`${this.resourceName}/updateFilterState`, {
+      //   filterClass: filter.class,
+      //   value: null,
+      // });
 
       this.handleFilterChanged(filter);
     },
@@ -152,6 +152,9 @@ export default {
 
       if (this.isPersisting) {
         // Get updated filter from $store;
+
+        console.log(this.persistedFilters);
+        console.log(filter.class);
         const updatedFilter = this.getFilter(filter.class);
         if (!updatedFilter) return;
         // Get filter index in localStorage;
