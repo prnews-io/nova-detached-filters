@@ -162,6 +162,7 @@ export default {
             filterClass: filter.class,
             value: updatedFilter.currentValue,
           });
+          console.log('check connection');
         } else {
           // If exists, update value
           this.persistedFilters[this.resourceName][filterIndex].value = updatedFilter.currentValue;
