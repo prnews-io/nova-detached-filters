@@ -103,10 +103,10 @@ export default {
     resetFilter(filter) {
       this.$store.commit(`${this.resourceName}/updateFilterState`, {
         filterClass: filter.class,
-        value: null,
+        value: '',
       });
 
-      this.handleFilterChanged(filter);
+      // this.handleFilterChanged(filter);
     },
 
     isFilterComponent(item) {
