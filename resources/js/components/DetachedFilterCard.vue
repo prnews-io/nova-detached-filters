@@ -26,7 +26,7 @@
       </ActionButton>
     </div>
     <div class="px-3 py-4 flex flex-wrap max-h-screen opacity-100" :class="{ hidden: isCollapsed }">
-      <div class="flex flex-wrap" :class="getWidth(item)" v-for="item in card.filters" :key="item.key">
+      <div class="flex flex-wrap" :class="getWidth(item)" v-for="item in card.filters" :key="`${item.key}-${componentKey}`">
         <!-- Single Filter -->
         <nova-detached-filter
           v-if="isFilterComponent(item)"
@@ -74,6 +74,8 @@ export default {
 
     isPersisting: false,
     isCollapsed: false,
+
+    componentKey: 0,
   }),
 
   created() {
@@ -103,10 +105,12 @@ export default {
     resetFilter(filter) {
       this.$store.commit(`${this.resourceName}/updateFilterState`, {
         filterClass: filter.class,
-        value: null,
+        value: '',
       });
 
       this.handleFilterChanged(filter);
+
+      this.componentKey += 1;
     },
 
     isFilterComponent(item) {
@@ -144,7 +148,7 @@ export default {
         });
       });
 
-      this.syncFilters();
+      // this.syncFilters();
     },
 
     handleFilterChanged(filter) {
@@ -160,11 +164,15 @@ export default {
           // If key-value pair doesn't exist in localStorage, save new
           this.persistedFilters[this.resourceName].push({
             filterClass: filter.class,
-            value: updatedFilter.currentValue,
+            value: updatedFilter.currentValue || '',
           });
         } else {
           // If exists, update value
-          this.persistedFilters[this.resourceName][filterIndex].value = updatedFilter.currentValue;
+          this.$store.commit(`${this.resourceName}/updateFilterState`, {
+            filterClass: filter.class,
+            value: updatedFilter.currentValue || '',
+          });
+          this.persistedFilters[this.resourceName][filterIndex].value = updatedFilter.currentValue || '';
         }
 
         localStorage.setItem('PERSISTED_DETACHED_FILTERS', JSON.stringify(this.persistedFilters));
@@ -189,6 +197,8 @@ export default {
     clearAllFilters() {
       this.initializePersistedFilters();
       this.clearSelectedFilters();
+
+      this.componentKey += 1;
     },
 
     /**
@@ -198,7 +208,7 @@ export default {
       this.getFilters().forEach(filterItem => {
         this.persistedFilters[this.resourceName].push({
           filterClass: filterItem.class,
-          value: filterItem.currentValue,
+          value: filterItem.currentValue || '',
         });
       });
 
